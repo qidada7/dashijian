@@ -1,6 +1,7 @@
 //对用户操作的请求功能进行存储
 
 var user = {
+    //登录事件
     login: function (options) {
         $.ajax({
             type: "POST",
@@ -22,7 +23,7 @@ var user = {
 
 
 
-
+    //返回登录事件
 
     logout: function (options) {
         $.ajax({
@@ -37,4 +38,6 @@ var user = {
             }
         })
     }
+
+
 }

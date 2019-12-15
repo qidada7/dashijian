@@ -105,6 +105,7 @@
     <script src="tools/confign.js"></script>
     <script src="tools/user.js"></script>
     <script>
+        //退出登录事件
         var move = $(".move");
         move.on("click", function () {
 
@@ -123,11 +124,38 @@
                 }
             })
 
-
-
-
-
         })
+
+
+
+        //更换头像
+        $.ajax({
+            url: "http://localhost:8000/admin/getuser",
+            success: function (res) {
+                // console.log(res);
+                if (res.code == 200) {
+                    $(".user_info img")[0].src = res.data.user_pic
+                    $(".user_center_link img")[0].src = res.data.user_pic
+
+                    $(".user_info span")[0].innerText = res.data.nickname
+                }
+            }
+        })
+        //文章总数管理
+        $.ajax({
+            url: "http://localhost:8000/admin/article_count",
+            success: function (res) {
+                if (res.code == 200) {
+
+
+                    // $(".spannel em")[0].innerHTML = res.data.all_count;
+                    // $(".spannel scolor01 em")[0].innerHTML = res.data.day_count
+
+                }
+
+            }
+        })
+
     </script>
 
 </body>

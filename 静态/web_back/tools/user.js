@@ -37,7 +37,23 @@ var user = {
                 }
             }
         })
-    }
+    },
+
+    //更换头像：
+    getuser: function (options) {
+        $.ajax({
+            url: GET_USER,
+            success: function (res) {
+                if (res.code == 200) {
+                    options.success(res)
+                }
+
+            }
+        })
+
+
+    },
+    wen_shu: function (options) { }
 
 
 }

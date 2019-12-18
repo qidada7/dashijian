@@ -22,19 +22,19 @@
             <div class="row opt_btns">
                 <div class="col-xs-6">
                     <form class="form-inline">
-                        <select id="selCategory" name="" class="form-control input-sm">
-                            <option>所有分类</option>
-                            <option>未分类</option>
+                        <select id="selCategory" name="type" class="form-control input-sm">
+                            <option value="">所有分类</option>
+                            <!-- <option>未分类</option>
                             <option>奇趣事</option>
                             <option>会生活</option>
-                            <option>爱旅行</option>
+                            <option>爱旅行</option> -->
                         </select>
                         <select id="selStatus" name="" class="form-control input-sm">
-                            <option>所有状态</option>
-                            <option value="drafted">草稿</option>
-                            <option value="published">已发布</option>
+                            <option value="">所有状态</option>
+                            <option value="草稿">草稿</option>
+                            <option value="已发布">已发布</option>
                         </select>
-                        <button id="btnSearch" class="btn btn-default btn-sm">筛选</button>
+                        <button id="btnSearch" class="btn btn-default btn-sm" type="button">筛选</button>
                     </form>
                 </div>
                 <div class="col-xs-6">
@@ -57,7 +57,7 @@
 
 
 
-                    <tr>
+                    <!-- <tr>
 
                         <td>王积千造统最头</td>
                         <td>杰克</td>
@@ -243,14 +243,14 @@
                             <a href="post-edit.html?id=995" class="btn btn-default btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 995 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
-                    </tr>
+                    </tr> -->
 
 
                 </tbody>
             </table>
 
             <div class="row text-center">
-                <ul class="pagination pagination-sm">
+                <ul class="pagination pagination-sm" id="list">
                     <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
                     <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
                     <li class="page-item active"><a href="#" class="page-link">1</a></li>
@@ -267,7 +267,31 @@
 
         </div>
     </div>
+    <script src="tools/confign.js"></script>
+    <script src="tools/list.js"></script>
+    <script src="js/template-web.js"></script>
+    <script src="js/yemian/jquery.twbsPagination.js"></script>
+    <script type="text/templat" id="qin">
+    {{each data val}}
+    <tr>
+        <td>{{val.title}}</td>
+        <td>{{val.author}}</td>
+        <td>{{val.type}}</td>
+        <td class="text-center">{{val.date}}</td>
+        <td class="text-center">{{val.state}}</td>
+        <td class="text-center">
+            <a href="post-edit.html?id=996" class="btn btn-default btn-xs">编辑</a>
+            <a href="javascript:deleteTr( 996 );" class="btn btn-danger btn-xs">删除</a>
+        </td>
+    </tr>
+    {{/each}}
+</script>
 
+    <script type="text/template" id="cai">
+    {{each data val}}
+    <option value="{{val.id}}">{{val.name}}</option>
+{{/each}}
+</script>
     <script>
         // 设置左侧菜单
         $('#release_btn').click(function () {
@@ -275,14 +299,72 @@
         })
     </script>
     <script>
-        $.ajax({
-            url: "http://localhost:8000/admin/comment_search",
+
+
+
+
+        new1()//请求显示页面
+
+
+        var page = 1
+        var lastTo = 0;
+        //获取列表的数据
+        list.show1({
             success: function (res) {
-                console.log(res);
-
+                $("#selCategory").append(template("cai", res))
             }
-
         })
+        //点击筛选按钮
+        $("#btnSearch").on("click", function () {
+            new1()
+            $(".first").click()
+        })
+
+
+
+
+
+
+        function new1() {
+            $.ajax({
+                url: "http://localhost:8000/admin/search",
+                data: {
+                    page: page,
+                    type: $("#selCategory").val(),//用于筛选用
+                    state: $("#selStatus").val(),//用于筛选用
+                },
+                success: function (res) {
+                    // console.log($("#selCategory").val());
+
+                    var ww = template("qin", res)
+                    $("tbody").html(ww)
+                    //以下是点击页面事件
+                    var topage = res.totalPage;
+                    if (topage === lastTo) {
+                        return
+                    }
+                    lastTo = topage
+
+                    $("#list").twbsPagination("destroy")//如果进行筛选，需要将旧的分页组织删除
+
+                    $("#list").twbsPagination({
+                        totalPages: topage,
+                        visiblePage: 5,
+                        first: "首页",
+                        last: "尾页",
+                        prev: "上一页",
+                        next: "下一页",
+                        onPageClick: function (e, currentPage) {
+                            page = currentPage;
+                            new1()
+                        }
+
+                    })
+                }
+
+            })
+        }
+
     </script>
 
 

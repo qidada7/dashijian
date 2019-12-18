@@ -28,23 +28,23 @@
         <div class="menu">
             <div class="menu_collapse fl">
                 <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
-                <ul class="level_two">
+                <ul class="level_two" id="nav0">
                     <li class="up"></li>
-                    <li><a href="#">最 新</a></li>
+                    <!-- <li><a href="#">最 新</a></li>
                     <li><a href="#">科 技</a></li>
                     <li><a href="#">股 市</a></li>
                     <li><a href="#">商 品</a></li>
                     <li><a href="#">外 汇</a></li>
-                    <li><a href="#">公 司</a></li>
+                    <li><a href="#">公 司</a></li> -->
                 </ul>
             </div>
-            <ul class="left_menu fl">
-                <li><a href="#">最 新</a></li>
+            <ul class="left_menu fl" id="nav1">
+                <!-- <li><a href="#">最 新</a></li>
                 <li><a href="#">科 技</a></li>
                 <li><a href="#">股 市</a></li>
                 <li><a href="#">商 品</a></li>
                 <li><a href="#">外 汇</a></li>
-                <li><a href="#">公 司</a></li>
+                <li><a href="#">公 司</a></li> -->
             </ul>
             <ul class="right_menu fr">
                 <li><a href="#">科技专题</a></li>
@@ -56,7 +56,7 @@
     <div class="main_con clearfix">
         <div class="left_con">
             <ul class="focus_list">
-                <li class="first">
+                <!-- <li class="first">
                     <a href="#"><img src="images/pic01.jpg" alt=""></a>
                     <p>图片说明</p>
                 </li>
@@ -75,7 +75,7 @@
                 <li>
                     <a href="#"><img src="images/pic06.jpg" alt=""></a>
                     <p>图片说明</p>
-                </li>
+                </li> -->
             </ul>
 
             <div class="common_title">
@@ -83,7 +83,7 @@
                 <a href="#" class="more"><i class="fa fa-angle-double-right"></i></a>
             </div>
 
-            <div class="common_news_list">
+            <!-- <div class="common_news_list">
                 <a href="#" class="list_pic"><img src="images/pic09.jpg" alt=""></a>
                 <h4><a href="#">亚马逊金融试水中国？背后却是和华尔街的“金融战争” </a></h4>
                 <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
@@ -141,7 +141,7 @@
                         )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
                     <b>发布于 2018-08-30 12:18:58</b>
                 </div>
-            </div>
+            </div> -->
 
         </div>
         <div class="right_con">
@@ -215,12 +215,80 @@
             <span>|</span>
             <a href="#">招聘人才</a>
             <span>|</span>
-            <a href="#">友情链接</a>		
+            <a href="#">友情链接</a>
         </div>
-        <p>CopyRight © 2019 深圳大事件信息技术股份有限公司   All Rights Reserved</p>
-        <p>电话：0755-****888    粤ICP备*******8号</p>
+        <p>CopyRight © 2019 深圳大事件信息技术股份有限公司 All Rights Reserved</p>
+        <p>电话：0755-****888 粤ICP备*******8号</p>
     </div>
 
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="../web_back/tools/confign.js"></script>
+    <!-- 引入地址统一写的地方 -->
+    <script src="../web_back/tools/list.js"></script>
+    <!-- 引入封装事件的地方 -->
+    <script src="js/js/template-web.js"></script>
+    <!-- 修改标题的引擎 -->
+    <script type="text/template" id="momo">
+        {{each data val}}
+        <!-- 给跳转页面地址后面加上id方便与后续识别 -->
+        <li><a href="./list.html?id={{val.id}}&{{val.name}}">{{val.name}}</a></li> 
+{{/each}}
+    </script>
+
+    <!-- 修改图片的引擎 -->
+    <script type="text/template" id="picc">
+    {{each data val i}}
+    <li {{if i==0}} class="first" {{/if}}>
+            <a href="#"><img src="{{val.cover}}" alt=""></a>
+            <p>{{val.title}}</p>
+        </li>
+    {{/each}}
+    </script>
+    <!-- 修改新闻区的引擎 -->
+    <script type="text/template" id="new11">
+        {{each data val}}
+        <div class="common_news_list">
+                <a href="#" class="list_pic"><img src="{{val.cover}}" alt=""></a>
+                <h4><a href="#">{{val.title}} </a></h4>
+                <p>{{val.content}}</p>
+                <div class="new_info">
+                    <span>标签：{{val.type}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{val.read}}
+                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( {{val.comment}} )</span>
+                    <b>发布于 {{val.date}}</b>
+                </div>
+            </div>
+            {{/each}}
+    </script>
+
+
+    <script>
+        //修改顶部导航栏数据
+        list.show1({
+            success: function (res) {
+                // console.log(res);
+                var tt = template("momo", res);
+                $("#nav1").html(tt)
+                $("#nav0").append(tt)
+
+            }
+        })
+        $.ajax({
+            url: "http://localhost:8000/admin/search",
+            data: {
+                perpage: 5//因为只能显示5张图片所以设置个数
+            },
+            success: function (res) {
+                // console.log(res);
+                var ww = template("picc", res)
+                $(".focus_list").html(ww)
+                var new22 = template("new11", res);
+                $(".common_title").after(new22)
+
+            }
+        })
+
+
+    </script>
 </body>
 
 </html>

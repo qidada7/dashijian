@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.pagination.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-	<script type="text/javascript" src="js/jquery.pagination.min.js"></script>
+    <script type="text/javascript" src="js/jquery.pagination.min.js"></script>
 </head>
 
 <body>
@@ -63,7 +63,7 @@
                 <h3>科 技</h3>
             </div>
 
-            <div class="common_news_list">
+            <!-- <div class="common_news_list">
                 <a href="#" class="list_pic"><img src="images/pic09.jpg" alt=""></a>
                 <h4><a href="#">亚马逊金融试水中国？背后却是和华尔街的“金融战争” </a></h4>
                 <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
@@ -135,17 +135,17 @@
                 </div>
             </div>
 
-            <div id="pagination" class="page"></div>
+            <div id="pagination" class="page"></div>-->
             <script>
-                $(function() {
+                $(function () {
                     $("#pagination").pagination({
                         currentPage: 2,
-                        totalPage:8,
-                        callback: function(current) {
+                        totalPage: 8,
+                        callback: function (current) {
                             alert('ok!');
                         }
                     });
-                });
+                }); 
             </script>
 
         </div>
@@ -220,11 +220,64 @@
             <span>|</span>
             <a href="#">招聘人才</a>
             <span>|</span>
-            <a href="#">友情链接</a>		
+            <a href="#">友情链接</a>
         </div>
-        <p>CopyRight © 2019 深圳大事件信息技术股份有限公司   All Rights Reserved</p>
-        <p>电话：0755-****888    粤ICP备*******8号</p>
+        <p>CopyRight © 2019 深圳大事件信息技术股份有限公司 All Rights Reserved</p>
+        <p>电话：0755-****888 粤ICP备*******8号</p>
     </div>
+    <script src="../web_back/js/template-web.js"></script>
+    <!-- 渲染引擎 -->
+    <script type="text/template" id="qinqin">
+
+        {{each data val}}
+        <div class="common_news_list">
+                <a href="./article.html?id={{val.id}}" class="list_pic"><img src="{{val.cover}}" alt=""></a>
+                <h4><a href="./article.html?id={{val.id}}">{{val.title}}</a></h4>
+                <p>{{val.content}}</p>
+                <div class="new_info">
+                    <span>标签：{{val.type}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{val.read}}
+                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论({{val.comment}} )</span>
+                    <b>发布于 {{val.data}}</b>
+                </div>
+            </div>
+    {{/each}}
+    
+    </script>
+    <script>
+        //location.search  可以查看当前页面的地址后面的参数
+        var ss = location.search
+        var wd = ss.substring(4, 5) //取到id的值
+        var ming = ss.split("&")[1]//取到名的乱码
+        ming = decodeURI(ming)  //将乱码转化为字符串的汉字
+        // console.log(typeof ming);
+
+
+        //不用转了，type对应的是id值
+        // var wan = location.search
+        // var can = wan.split("=")[1]
+        if (ss == "") {  //判断是否是主页面跳转过来的，如果不是就返回主页面
+            location.href = "./index.html"
+        }
+        $.ajax({
+            url: "http://localhost:8000/admin/search",
+            data: {
+                type: wd
+            },
+            success: function (res) {
+                // console.log(res);
+
+                $(".list_title").after(template("qinqin", res))
+                console.log($(".list_title").children("h3")[0]);
+                // console.log(res.data[0].type);
+                $(".list_title").children("h3").html(res.data[0].type) //解决标题问题
+                //此时res是一个数组，找到其中随便一个下标的type
+
+            }
+        })
+
+
+
+    </script>
 
 </body>
 
